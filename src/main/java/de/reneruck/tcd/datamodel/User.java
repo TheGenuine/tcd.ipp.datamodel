@@ -3,13 +3,18 @@ package de.reneruck.tcd.datamodel;
 public class User {
 
 	private long id;
-	private String forename;
-	private String surname;
+	private String forename = "";
+	private String surname = "";
 	
-	public User(String forename, String surname) {
+	public User(String name) {
 		super();
-		this.forename = forename;
-		this.surname = surname;
+		String[] split = name.split(" ");
+		if(split.length >= 1) {
+			this.forename = split[0];
+		} 
+		if(split.length > 1) {
+			this.surname = split[1];
+		}
 	}
 
 	public long getId() {
