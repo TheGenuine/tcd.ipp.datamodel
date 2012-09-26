@@ -10,13 +10,17 @@ public class Booking {
 	private long Id;
 	private User requester;
 	private Date travelDate;
+	private Location from;
+	private Location to;
 	private boolean accepted;
 	
-	public Booking(User requester, Date travelDate) {
+	public Booking(User requester, Date travelDate, Location from, Location to) {
 		super();
 		this.Id = System.currentTimeMillis();
 		this.requester = requester;
 		this.travelDate = travelDate;
+		this.from = from;
+		this.to = to;
 	}
 
 	public long getId() {
@@ -50,5 +54,21 @@ public class Booking {
 		} else {
 			throw new NotAcceptedException();
 		}
+	}
+
+	public Location getFrom() {
+		return from;
+	}
+
+	public void setFrom(Location from) {
+		this.from = from;
+	}
+
+	public Location getTo() {
+		return to;
+	}
+
+	public void setTo(Location to) {
+		this.to = to;
 	}
 }
