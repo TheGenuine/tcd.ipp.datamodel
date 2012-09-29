@@ -1,6 +1,9 @@
 package de.reneruck.tcd.datamodel;
 
-import java.sql.Date;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.reneruck.tcd.datamodel.exceptions.NotAcceptedException;
 
@@ -14,7 +17,7 @@ public class Booking {
 	private Location to;
 	private boolean accepted;
 	
-	public Booking(User requester, Date travelDate, Location from, Location to) {
+	public Booking(User requester, Date travelDate, Location from) {
 		super();
 		this.Id = System.currentTimeMillis();
 		this.requester = requester;
@@ -45,10 +48,12 @@ public class Booking {
 
 	public String generateTicket() throws NotAcceptedException {
 		if(this.accepted) {
+			DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 			return "======== Ticket ======= \n" +
+					"ID: " + this.Id + "\n" +
 					"Name: " + this.requester.getForename() + "\n" +
 					"Surname: " + this.requester.getSurname() + "\n" +
-					"Departing: " + travelDate.getTime() + "\n" +
+					"Departing: " + df.format(this.travelDate) + "\n" +
 					"=========================";
 					
 		} else {
@@ -70,5 +75,14 @@ public class Booking {
 
 	public void setTo(Location to) {
 		this.to = to;
+	}
+
+	public String printOverview() {
+		DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+		return "============================= \n" +
+				"Name: " + this.requester.getForename() + "\n" +
+				"Surname: " + this.requester.getSurname() + "\n" +
+				"Departing: " + df.format(this.travelDate) + "\n" +
+				"=============================";
 	}
 }
