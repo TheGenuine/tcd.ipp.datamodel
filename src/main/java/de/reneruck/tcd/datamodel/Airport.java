@@ -1,5 +1,5 @@
 package de.reneruck.tcd.datamodel;
 
-public enum Location {
+public enum Airport {
 	camp, city
 }

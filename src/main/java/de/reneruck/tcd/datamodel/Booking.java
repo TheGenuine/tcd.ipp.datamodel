@@ -13,11 +13,11 @@ public class Booking {
 	private long Id;
 	private User requester;
 	private Date travelDate;
-	private Location from;
-	private Location to;
+	private Airport from;
+	private Airport to;
 	private boolean accepted;
 	
-	public Booking(User requester, Date travelDate, Location from) {
+	public Booking(User requester, Date travelDate, Airport from) {
 		super();
 		this.Id = System.currentTimeMillis();
 		this.requester = requester;
@@ -61,19 +61,19 @@ public class Booking {
 		}
 	}
 
-	public Location getFrom() {
+	public Airport getFrom() {
 		return from;
 	}
 
-	public void setFrom(Location from) {
+	public void setFrom(Airport from) {
 		this.from = from;
 	}
 
-	public Location getTo() {
+	public Airport getTo() {
 		return to;
 	}
 
-	public void setTo(Location to) {
+	public void setTo(Airport to) {
 		this.to = to;
 	}
 
