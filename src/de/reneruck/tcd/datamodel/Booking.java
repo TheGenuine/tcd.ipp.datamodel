@@ -11,26 +11,29 @@ import de.reneruck.tcd.datamodel.exceptions.NotAcceptedException;
 public class Booking {
 
 	private long Id;
-	private User requester;
+	private String requester;
 	private Date travelDate;
 	private Airport from;
 	private Airport to;
 	private boolean accepted;
 	
-	public Booking(User requester, Date travelDate, Airport from) {
+	public Booking() {
+		// required for serialization
+	}
+	
+	public Booking(String requester, Date travelDate, Airport from) {
 		super();
 		this.Id = System.currentTimeMillis();
 		this.requester = requester;
 		this.travelDate = travelDate;
 		this.from = from;
-		this.to = to;
 	}
 
 	public long getId() {
 		return Id;
 	}
 
-	public User getRequester() {
+	public String getRequester() {
 		return requester;
 	}
 
@@ -51,8 +54,7 @@ public class Booking {
 			DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 			return "======== Ticket ======= \n" +
 					"ID: " + this.Id + "\n" +
-					"Name: " + this.requester.getForename() + "\n" +
-					"Surname: " + this.requester.getSurname() + "\n" +
+					"Name: " + this.requester + "\n" +
 					"Departing: " + df.format(this.travelDate) + "\n" +
 					"=========================";
 					
@@ -80,8 +82,7 @@ public class Booking {
 	public String printOverview() {
 		DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 		return "============================= \n" +
-				"Name: " + this.requester.getForename() + "\n" +
-				"Surname: " + this.requester.getSurname() + "\n" +
+				"Name: " + this.requester + "\n" +
 				"Departing: " + df.format(this.travelDate) + "\n" +
 				"=============================";
 	}
