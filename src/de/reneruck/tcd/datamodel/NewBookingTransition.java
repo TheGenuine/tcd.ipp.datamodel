@@ -2,6 +2,8 @@ package de.reneruck.tcd.datamodel;
 
 import java.util.Date;
 
+import com.google.gson.Gson;
+
 public class NewBookingTransition implements Transition {
 
 	private Booking booking;
@@ -53,7 +55,12 @@ public class NewBookingTransition implements Transition {
 		this.reason = reason;
 	}
 
-
+	@Override
+	public String toString() {
+		Gson gson = new Gson();
+		String json = this.getClass().getName() + "=" + gson.toJson(this);
+		return json;
+	}
 
 	public String generateSql()
 	{
