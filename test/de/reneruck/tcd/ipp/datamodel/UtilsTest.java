@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import de.reneruck.tcd.datamodel.Utils;
+import de.reneruck.tcd.ipp.datamodel.Utils;
 
 public class UtilsTest {
 

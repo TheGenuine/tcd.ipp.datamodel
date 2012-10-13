@@ -1,4 +1,4 @@
-package de.reneruck.tcd.datamodel;
+package de.reneruck.tcd.ipp.datamodel;
 
 import java.util.Date;
 

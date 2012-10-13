@@ -1,11 +1,11 @@
-package de.reneruck.tcd.datamodel;
+package de.reneruck.tcd.ipp.datamodel;
 
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import de.reneruck.tcd.datamodel.exceptions.NotAcceptedException;
+import de.reneruck.tcd.ipp.datamodel.exceptions.NotAcceptedException;
 
 
 public class Booking {
@@ -27,6 +27,10 @@ public class Booking {
 		this.requester = requester;
 		this.travelDate = travelDate;
 		this.from = from;
+	}
+
+	public Booking(User user, Date date, Airport startLoc) {
+		// TODO Auto-generated constructor stub
 	}
 
 	public long getId() {
@@ -85,5 +89,9 @@ public class Booking {
 				"Name: " + this.requester + "\n" +
 				"Departing: " + df.format(this.travelDate) + "\n" +
 				"=============================";
+	}
+
+	public void storeToDB() {
+		
 	}
 }

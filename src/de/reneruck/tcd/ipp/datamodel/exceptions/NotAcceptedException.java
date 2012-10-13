@@ -1,4 +1,4 @@
-package de.reneruck.tcd.datamodel.exceptions;
+package de.reneruck.tcd.ipp.datamodel.exceptions;
 
 public class NotAcceptedException extends Exception {
 
