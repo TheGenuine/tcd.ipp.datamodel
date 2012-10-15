@@ -14,4 +14,5 @@ public interface Transition {
 	public void setBookingId(long bookingId);
 	public void setHandlingDate(Date handlingDate);
 	public void setReason(String reason);
+	public void setTransitionState(TransitionState state);
 }

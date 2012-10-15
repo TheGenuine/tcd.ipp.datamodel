@@ -73,4 +73,13 @@ public class NewBookingTransition implements Transition {
 		return this.state;
 	}
 
+	@Override
+	public void setTransitionState(TransitionState state) {
+		this.state = state;
+	}
+
+	@Override
+	public boolean equals(Object arg0) {
+		return ((Transition)arg0).getTransitionId() == this.getTransitionId();
+	}
 }
