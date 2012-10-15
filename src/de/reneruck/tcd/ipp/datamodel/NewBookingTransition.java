@@ -8,9 +8,10 @@ import com.google.gson.Gson;
 public class NewBookingTransition implements Transition {
 
 	private Booking booking;
-
+	private long transitionId;
 	private long bookingId;
 	private Date handlingDate;
+	private TransitionState state = TransitionState.PENDING;
 	private String reason;
 
 	public NewBookingTransition(Booking booking) {
@@ -26,7 +27,7 @@ public class NewBookingTransition implements Transition {
 		this.bookingId = bookingId;
 	}
 
-	public Date getHandlingDate() {
+	public Date getProcessingDate() {
 		return handlingDate;
 	}
 
@@ -60,6 +61,16 @@ public class NewBookingTransition implements Transition {
 		if (connection.bookingExists(this.bookingId)) {
 			
 		}
+	}
+
+	@Override
+	public long getTransitionId() {
+		return this.transitionId;
+	}
+
+	@Override
+	public TransitionState getTransitionState() {
+		return this.state;
 	}
 
 }

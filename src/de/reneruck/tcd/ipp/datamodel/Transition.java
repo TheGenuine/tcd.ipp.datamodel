@@ -5,8 +5,10 @@ import java.util.Date;
 
 public interface Transition {
 	
+	public long getTransitionId();
 	public long getBookingId();
-	public Date getHandlingDate();
+	public Date getProcessingDate();
+	public TransitionState getTransitionState();
 	public String getReason();
 	public void performTransition(DatabaseConnection connection) throws ConnectException;
 	public void setBookingId(long bookingId);
