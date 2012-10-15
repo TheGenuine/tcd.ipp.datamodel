@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 
-
 public class DatabaseConnection {
 
 	private static Connection dbConnection = null;
@@ -41,7 +40,8 @@ public class DatabaseConnection {
 	}
 
 	private Connection getInstance() throws ConnectException {
-		if (dbConnection == null) connectToDB();
+		if (dbConnection == null)
+			connectToDB();
 		return dbConnection;
 	}
 
@@ -63,7 +63,7 @@ public class DatabaseConnection {
 
 	public int getBookingsForFlight(int flightId) throws ConnectException {
 		if (getInstance() != null) {
-			
+
 		}
 		return 0;
 	}
@@ -86,7 +86,7 @@ public class DatabaseConnection {
 
 	private boolean execute(String sql) throws ConnectException {
 		dbConnection = getInstance();
-		
+
 		if (dbConnection != null) {
 			// Anfrage-Statement erzeugen.
 			Statement query;
@@ -101,7 +101,7 @@ public class DatabaseConnection {
 		}
 		return false;
 	}
-	
+
 	private ResultSet executeQuery(String sql) throws ConnectException {
 		dbConnection = getInstance();
 
@@ -122,5 +122,15 @@ public class DatabaseConnection {
 
 	public boolean executeSql(String sqlStatement) throws ConnectException {
 		return execute(sqlStatement);
+	}
+
+	public void close() {
+		if (dbConnection != null) {
+			try {
+				dbConnection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
