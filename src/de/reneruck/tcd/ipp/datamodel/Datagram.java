@@ -11,11 +11,11 @@ public class Datagram {
 	public static final String TRANSITION = "transition";
 	
 	private String type;
-	private Map<String, Object> content = new HashMap<String, Object>();
+	private Map<String, Object> payload = new HashMap<String, Object>();
 
 	public Datagram(String type, Map<String, Object> content) {
 		this.type = type;
-		this.content = content;
+		this.payload = content;
 	}
 
 	public Datagram(String type) {
@@ -28,16 +28,16 @@ public class Datagram {
 		return gson.toJson(this);
 	}
 
-	public void addContentEntry(String identfier, Object content) {
-		this.content.put(identfier, content);
+	public void addPayloadEntry(String identfier, Object content) {
+		this.payload.put(identfier, content);
 	}
 	
-	public Object getContent(String identifier) {
-		return this.content.get(identifier);
+	public Object getPayload(String identifier) {
+		return this.payload.get(identifier);
 	}
 	
 	public Set<String> getKeys() {
-		return this.content.keySet();
+		return this.payload.keySet();
 	}
 	
 	public String getType() {
