@@ -82,4 +82,8 @@ public class NewBookingTransition implements Transition {
 	public boolean equals(Object arg0) {
 		return ((Transition)arg0).getTransitionId() == this.getTransitionId();
 	}
+	@Override
+	public int hashCode() {
+		return (int) (this.transitionId + this.bookingId);
+	}
 }
