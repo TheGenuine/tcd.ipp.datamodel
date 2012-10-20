@@ -1,12 +1,15 @@
 package de.reneruck.tcd.ipp.datamodel;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.gson.Gson;
 
-public class Datagram {
+public class Datagram implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	public static final String TRANSITION = "transition";
 	

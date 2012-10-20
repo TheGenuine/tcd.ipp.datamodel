@@ -1,12 +1,14 @@
 package de.reneruck.tcd.ipp.datamodel;
 
+import java.io.Serializable;
 import java.net.ConnectException;
 import java.util.Date;
 
 import com.google.gson.Gson;
 
-public class NewBookingTransition implements Transition {
+public class NewBookingTransition implements Transition, Serializable {
 
+	private static final long serialVersionUID = -7340057807403227632L;
 	private Booking booking;
 	private long transitionId;
 	private long bookingId;
