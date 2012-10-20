@@ -16,6 +16,7 @@ public class Statics {
 	public static final String RX_HELI =  "RX_HELI_ACK";
 	public static final String SHUTDOWN = "SHUTDOWN";
 	public static final String FINISH_RX_HELI = "FINISH_RX_HELI";
+	public static final String FINISH_RX_SERVER = "FINISH_RX_SERVER";
 	public static final String DATA = "DATA";
 	
 	public static final String TRAMSITION_ID = "transitionId";
