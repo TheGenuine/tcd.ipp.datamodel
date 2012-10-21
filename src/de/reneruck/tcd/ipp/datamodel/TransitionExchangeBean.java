@@ -10,8 +10,8 @@ public class TransitionExchangeBean {
 
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
-	private FiniteStateMachine fsm;
 	private Socket connection;
+	private FiniteStateMachine fsm;
 	
 	public ObjectOutputStream getOut() {
 		return out;
@@ -25,17 +25,16 @@ public class TransitionExchangeBean {
 	public void setIn(ObjectInputStream in) {
 		this.in = in;
 	}
-	public FiniteStateMachine getFsm() {
-		return this.fsm;
-	}
-	public void setFsm(FiniteStateMachine fsm) {
-		this.fsm = fsm;
-	}
 	public Socket getConnection() {
 		return this.connection;
 	}
 	public void setConnection(Socket connection) {
 		this.connection = connection;
 	}
-	
+	public FiniteStateMachine getFsm() {
+		return fsm;
+	}
+	public void setFsm(FiniteStateMachine fsm) {
+		this.fsm = fsm;
+	}
 }
