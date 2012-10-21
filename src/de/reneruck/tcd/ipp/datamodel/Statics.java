@@ -5,7 +5,8 @@ public class Statics {
 	public static final int DB_SERVER_PORT = 4446;
 	public static final int DISCOVERY_PORT = 5899;
 
-	public static final int CLIENT_PORT = 6899;
+	public static final int CLIENT_PORT = 4447;
+	public static final int CLIENT_DISCOVERY_PORT = 6899;
 	
 	public static final String ACK = "ACK";
 	public static final String SYN = "SYN";
@@ -23,5 +24,4 @@ public class Statics {
 	
 	public static final String TRAMSITION_ID = "transitionId";
 	public static String CONTENT_TRANSITION = "transition";
-
 }
