@@ -11,22 +11,13 @@ public class NewBookingTransition implements Transition, Serializable {
 	private static final long serialVersionUID = -7340057807403227632L;
 	private Booking booking;
 	private long transitionId;
-	private long bookingId;
 	private Date handlingDate;
 	private TransitionState state = TransitionState.PENDING;
 	private String reason;
 
 	public NewBookingTransition(Booking booking) {
 		this.booking = booking;
-		setBookingId(booking.getId());
-	}
-
-	public long getBookingId() {
-		return bookingId;
-	}
-
-	public void setBookingId(long bookingId) {
-		this.bookingId = bookingId;
+		this.transitionId = booking.getId();
 	}
 
 	public Date getProcessingDate() {
@@ -53,14 +44,14 @@ public class NewBookingTransition implements Transition, Serializable {
 	}
 
 	private String generateSql() {
-		String sql = "INSERT INTO Bookings (booking_id, StartAirportId, User, Flight) " + "VALUES(" + this.bookingId + ", " + this.booking.getFrom().ordinal() + " ,'" + this.booking.getRequester()
+		String sql = "INSERT INTO Bookings (booking_id, StartAirportId, User, Flight) " + "VALUES(" + this.booking.getId() + ", " + this.booking.getFrom().ordinal() + " ,'" + this.booking.getRequester()
 				+ "', 19)";
 		return sql;
 	}
 
 	@Override
 	public void performTransition(DatabaseConnection connection) throws ConnectException {
-		if (connection.bookingExists(this.bookingId)) {
+		if (connection.bookingExists(this.booking.getId())) {
 			
 		}
 	}
@@ -86,6 +77,11 @@ public class NewBookingTransition implements Transition, Serializable {
 	}
 	@Override
 	public int hashCode() {
-		return (int) (this.transitionId + this.bookingId);
+		return (int) (this.transitionId + this.booking.getId());
+	}
+
+	@Override
+	public Booking getBooking() {
+		return this.booking;
 	}
 }
