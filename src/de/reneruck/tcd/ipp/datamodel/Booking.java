@@ -1,6 +1,7 @@
 package de.reneruck.tcd.ipp.datamodel;
 
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,33 +9,26 @@ import java.util.Date;
 import de.reneruck.tcd.ipp.datamodel.exceptions.NotAcceptedException;
 
 
-public class Booking {
+public class Booking implements Serializable {
 
-	private long Id;
+	private static final long serialVersionUID = 2638486391776355573L;
+	private long id;
 	private String requester;
 	private Date travelDate;
 	private Airport from;
 	private Airport to;
 	private boolean accepted;
 	
-	public Booking() {
-		// required for serialization
-	}
-	
 	public Booking(String requester, Date travelDate, Airport from) {
 		super();
-		this.Id = System.currentTimeMillis();
+		this.id = System.currentTimeMillis();
 		this.requester = requester;
 		this.travelDate = travelDate;
 		this.from = from;
 	}
 
-	public Booking(User user, Date date, Airport startLoc) {
-		// TODO Auto-generated constructor stub
-	}
-
 	public long getId() {
-		return Id;
+		return id;
 	}
 
 	public String getRequester() {
@@ -57,7 +51,7 @@ public class Booking {
 		if(this.accepted) {
 			DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 			return "======== Ticket ======= \n" +
-					"ID: " + this.Id + "\n" +
+					"ID: " + this.id + "\n" +
 					"Name: " + this.requester + "\n" +
 					"Departing: " + df.format(this.travelDate) + "\n" +
 					"=========================";
