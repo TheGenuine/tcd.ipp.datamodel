@@ -3,6 +3,7 @@ package de.reneruck.tcd.ipp.datamodel;
 import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -45,11 +46,20 @@ public class DatabaseConnection {
 		return dbConnection;
 	}
 
-	public boolean bookingExists(long id) throws ConnectException {
+	/**
+	 * Checks if a specific booking exists.
+	 * 
+	 * @param booking_id
+	 *            the id of the desired booking
+	 * @return true if a booking with the given booking_id exists
+	 * @throws ConnectException
+	 *             can occur if no connection to the database is available
+	 */
+	public boolean bookingExists(long booking_id) throws ConnectException {
 		if (getInstance() != null) {
 			try {
 				Statement query = dbConnection.createStatement();
-				String sql = "SELECT * FROM bookings WHERE booking_id = " + id;
+				String sql = "SELECT * FROM bookings WHERE booking_id = " + booking_id;
 				ResultSet result = query.executeQuery(sql);
 				if (result != null) {
 					return result.first();
@@ -61,13 +71,42 @@ public class DatabaseConnection {
 		return false;
 	}
 
-	public int getBookingsForFlight(int flightId) throws ConnectException {
+	/**
+	 * Returns the count of bookings already made for the given flight
+	 * 
+	 * @param flightId
+	 *            the flightId(DB id) of the desired flight
+	 * @return the count of bookings for the given flight
+	 * @throws ConnectException
+	 *             can occur if no connection to the database is available
+	 */
+	public int getBookingCountForFlight(int flightId) throws ConnectException {
 		if (getInstance() != null) {
-
+			String sql = "SELECT COUNT(ID) FROM mydb.bookings WHERE Flight = " + flightId;
+			ResultSet result = executeQuery(sql);
+			try {
+				if (result != null && result.first()) {
+					return result.getInt(1);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return 0;
 	}
 
+	/**
+	 * Looks for a flight at the given {@link Date} +/- 1 hour, from the given
+	 * {@link Airport}
+	 * 
+	 * @param date
+	 *            the date to look for a flight
+	 * @param from
+	 *            the airport to fly from
+	 * @return the id of the flight if found one, otherwise 0 will be returned.
+	 * @throws ConnectException
+	 *             can occur if no connection to the database is available
+	 */
 	public int getFlightForDate(Date date, Airport from) throws ConnectException {
 		long timestamp = date.getTime();
 		String sql = "SELECT  idFlight FROM mydb.flight where Date = " + timestamp + " " + "OR Date+3600000 >=  " + timestamp + " " + "AND Date - 3600000 <= " + timestamp + " AND DepartureAirport = "
@@ -84,23 +123,34 @@ public class DatabaseConnection {
 		return 0;
 	}
 
-	private boolean execute(String sql) throws ConnectException {
-		dbConnection = getInstance();
+	/**
+	 * Inserts a new booking into the database.
+	 * 
+	 * @param booking
+	 *            the {@link Booking} Object to be inserted.
+	 * @param flightId
+	 *            the flight to make this booking for
+	 * @return the database id of the booking if successful or 0 if not.
+	 * @throws ConnectException
+	 *             can occur if no connection to the database is available
+	 */
+	public int makeABooking(Booking booking, long flightId) throws ConnectException {
 
-		if (dbConnection != null) {
-			// Anfrage-Statement erzeugen.
-			Statement query;
-			try {
-				query = dbConnection.createStatement();
-				return query.execute(sql);
-			} catch (SQLException e) {
-				e.printStackTrace();
+		String query = "INSERT INTO mydb.bookings (booking_id, StartAirportId, User, Flight) "
+		+ "values(" + booking.getId() + ", " + booking.getFrom().ordinal() + ", '" + booking.getRequester()+ "', " + flightId + ")";
+		ResultSet result = executeInsert(query);
+
+		try {
+			if (result != null && result.first()) {
+				return result.getInt(1);
 			}
-		} else {
-			throw new ConnectException("Database unreachable");
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		return false;
+		return 0;
 	}
+	
+
 
 	private ResultSet executeQuery(String sql) throws ConnectException {
 		dbConnection = getInstance();
@@ -120,8 +170,47 @@ public class DatabaseConnection {
 		return null;
 	}
 
-	public boolean executeSql(String sqlStatement) throws ConnectException {
-		return execute(sqlStatement);
+	/**
+	 * Executes the given insert statement and returns all generated ID's that
+	 * were made with this statement.
+	 * 
+	 * @param sql
+	 *            insert statement
+	 * @return a {@link ResultSet} of generated ID's or null if none have been
+	 *         generated or an error ocured.
+	 * @throws ConnectException
+	 *             can occur if no connection to the database is available
+	 */
+	public ResultSet executeInsert(String sql) throws ConnectException {
+		dbConnection = getInstance();
+
+		if (dbConnection != null) {
+			try {
+				PreparedStatement prepareStatement = dbConnection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				prepareStatement.execute(sql, Statement.RETURN_GENERATED_KEYS);
+				return prepareStatement.getGeneratedKeys();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			throw new ConnectException("Database unreachable");
+		}
+		return null;
+	}
+	
+	/**
+	 * Executes a given SQL statement without any check before.<br>
+	 * Only useful for inserts. Will not return anything from the database.
+	 * 
+	 * @param sqlStatement
+	 *            the statement to execute
+	 * @return true if the execution of the statement was successful. false if
+	 *         not.
+	 * @throws ConnectException
+	 *             can occur if no connection to the database is available
+	 */
+	public ResultSet executeSql(String sqlStatement) throws ConnectException {
+		return executeQuery(sqlStatement);
 	}
 
 	public void close() {
