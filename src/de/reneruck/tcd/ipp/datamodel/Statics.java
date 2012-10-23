@@ -23,5 +23,6 @@ public class Statics {
 	public static final String DATA = "DATA";
 	
 	public static final String TRAMSITION_ID = "transitionId";
+	public static final int MAX_PASSENGERS = 6;
 	public static String CONTENT_TRANSITION = "transition";
 }

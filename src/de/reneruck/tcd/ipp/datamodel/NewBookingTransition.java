@@ -51,9 +51,30 @@ public class NewBookingTransition implements Transition, Serializable {
 
 	@Override
 	public void performTransition(DatabaseConnection connection) throws ConnectException {
-		if (connection.bookingExists(this.booking.getId())) {
+		
+		if (!connection.bookingExists(this.booking.getId())) { // if already exists we don't have to do anything
 			
+			int flightForDate = connection.getFlightForDate(this.booking.getTravelDate(), this.booking.getFrom());
+			if(flightForDate > 0){
+				if(Statics.MAX_PASSENGERS > connection.getBookingCountForFlight(flightForDate)) {
+					int bookingId = connection.makeABooking(this.booking, flightForDate);
+					if(bookingId > 0) {
+						this.booking.setAccepted(true);
+						this.handlingDate = new Date(System.currentTimeMillis());
+					}
+				} else {
+					declineRequest("Flight already full");
+				}
+			} else {
+				declineRequest("No flight at the desired time");
+			}
 		}
+	}
+
+	private void declineRequest(String reason) {
+		this.reason = reason;
+		this.handlingDate = new Date(System.currentTimeMillis());
+		this.booking.setAccepted(false);
 	}
 
 	@Override
