@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.reneruck.tcd.ipp.datamodel.transition.NewBookingTransition;
+import de.reneruck.tcd.ipp.datamodel.transition.Transition;
+
 /**
  * Bean to hold the data transported by the Helicopter
  * 
