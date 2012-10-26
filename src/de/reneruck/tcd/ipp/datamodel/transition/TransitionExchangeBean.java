@@ -1,4 +1,4 @@
-package de.reneruck.tcd.ipp.datamodel;
+package de.reneruck.tcd.ipp.datamodel.transition;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

@@ -1,10 +1,14 @@
-package de.reneruck.tcd.ipp.datamodel;
+package de.reneruck.tcd.ipp.datamodel.transition;
 
 import java.io.Serializable;
 import java.net.ConnectException;
 import java.util.Date;
 
 import com.google.gson.Gson;
+
+import de.reneruck.tcd.ipp.datamodel.Booking;
+import de.reneruck.tcd.ipp.datamodel.Statics;
+import de.reneruck.tcd.ipp.datamodel.database.MySqlDatabaseConnection;
 
 public class NewBookingTransition implements Transition, Serializable {
 
@@ -43,14 +47,8 @@ public class NewBookingTransition implements Transition, Serializable {
 		return json;
 	}
 
-	private String generateSql() {
-		String sql = "INSERT INTO Bookings (booking_id, StartAirportId, User, Flight) " + "VALUES(" + this.booking.getId() + ", " + this.booking.getFrom().ordinal() + " ,'" + this.booking.getRequester()
-				+ "', 19)";
-		return sql;
-	}
-
 	@Override
-	public void performTransition(DatabaseConnection connection) throws ConnectException {
+	public void performTransition(MySqlDatabaseConnection connection) throws ConnectException {
 		
 		if (!connection.bookingExists(this.booking.getId())) { // if already exists we don't have to do anything
 			
