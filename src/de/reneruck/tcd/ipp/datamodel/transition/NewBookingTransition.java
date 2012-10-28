@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 
 import de.reneruck.tcd.ipp.datamodel.Booking;
 import de.reneruck.tcd.ipp.datamodel.Statics;
-import de.reneruck.tcd.ipp.datamodel.database.MySqlDatabaseConnection;
+import de.reneruck.tcd.ipp.datamodel.database.DatabaseConnection;
 
 public class NewBookingTransition implements Transition, Serializable {
 
@@ -48,7 +48,7 @@ public class NewBookingTransition implements Transition, Serializable {
 	}
 
 	@Override
-	public void performTransition(MySqlDatabaseConnection connection) throws ConnectException {
+	public void performTransition(DatabaseConnection connection) throws ConnectException {
 		
 		if (!connection.bookingExists(this.booking.getId())) { // if already exists we don't have to do anything
 			

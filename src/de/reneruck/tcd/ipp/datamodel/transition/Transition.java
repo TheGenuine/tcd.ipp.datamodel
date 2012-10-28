@@ -4,7 +4,7 @@ import java.net.ConnectException;
 import java.util.Date;
 
 import de.reneruck.tcd.ipp.datamodel.Booking;
-import de.reneruck.tcd.ipp.datamodel.database.MySqlDatabaseConnection;
+import de.reneruck.tcd.ipp.datamodel.database.DatabaseConnection;
 
 public interface Transition {
 	
@@ -13,7 +13,7 @@ public interface Transition {
 	public Date getProcessingDate();
 	public TransitionState getTransitionState();
 	public String getReason();
-	public void performTransition(MySqlDatabaseConnection connection) throws ConnectException;
+	public void performTransition(DatabaseConnection connection) throws ConnectException;
 	public void setHandlingDate(Date handlingDate);
 	public void setReason(String reason);
 	public void setTransitionState(TransitionState state);
