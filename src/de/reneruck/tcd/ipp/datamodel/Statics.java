@@ -1,7 +1,8 @@
 package de.reneruck.tcd.ipp.datamodel;
 
 public class Statics {
-
+	public static final String DB_FILE = "Database.db";
+	
 	public static final int DB_SERVER_PORT = 4446;
 	public static final int DISCOVERY_PORT = 5899;
 
