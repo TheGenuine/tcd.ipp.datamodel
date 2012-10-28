@@ -32,8 +32,8 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see de.reneruck.tcd.ipp.datamodel.DatabaseConnection2#bookingExists(long)
+	/**
+	 * {@inheritDoc DatabaseConnection#bookingExists(long)}
 	 */
 	@Override
 	public boolean bookingExists(long booking_id) throws ConnectException {
@@ -42,17 +42,25 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 			ResultSet result = executeQuery(sql);
 			try {
 				if (result != null) {
-					return result.first();
+					return (result.getInt(1) != 0);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				try {
+					if(result != null) {
+						result.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.reneruck.tcd.ipp.datamodel.DatabaseConnection2#getBookingCountForFlight(int)
+	/**
+	 * {@inheritDoc DatabaseConnection#bookingExists(long)}
 	 */
 	@Override
 	public int getBookingCountForFlight(int flightId) throws ConnectException {
@@ -60,23 +68,31 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 			String sql = "SELECT COUNT(ID) FROM bookings WHERE Flight = " + flightId;
 			ResultSet result = executeQuery(sql);
 			try {
-				if (result != null && result.first()) {
+				if (result != null) {
 					return result.getInt(1);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				try {
+					if(result != null) {
+						result.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.reneruck.tcd.ipp.datamodel.DatabaseConnection2#getFlightForDate(java.util.Date, de.reneruck.tcd.ipp.datamodel.Airport)
+	/**
+	 * {@inheritDoc DatabaseConnection#getFlightForDate(Date, Airport)}
 	 */
 	@Override
 	public int getFlightForDate(Date date, Airport from) throws ConnectException {
 		long timestamp = date.getTime();
-		String sql = "SELECT  idFlight FROM flight where Date = " + timestamp + " " + "OR Date+3600000 >=  " + timestamp + " " + "AND Date - 3600000 <= " + timestamp + " AND DepartureAirport = "
+		String sql = "SELECT idFlight FROM flight where Date = " + timestamp + " OR ( Date <=  " + (timestamp+3600000L) + " AND Date >= " + (timestamp-3600000L) + ") AND DepartureAirport = "
 				+ from.ordinal() + " LIMIT 1";
 		ResultSet result = executeQuery(sql);
 		try {
@@ -85,13 +101,21 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if(result != null) {
+					result.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.reneruck.tcd.ipp.datamodel.DatabaseConnection2#makeABooking(de.reneruck.tcd.ipp.datamodel.Booking, long)
+	/**
+	 * {@inheritDoc DatabaseConnection#makeABooking(Booking, long)}
 	 */
 	@Override
 	public int makeABooking(Booking booking, long flightId) throws ConnectException {
@@ -99,7 +123,7 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 		+ "values(" + booking.getId() + ", " + booking.getFrom().ordinal() + ", '" + booking.getRequester()+ "', " + flightId + ")";
 		ResultSet result = executeUpdate(query);
 		try {
-			if (result != null && result.first()) {
+			if (result != null) {
 				return result.getInt(1);
 			}
 		} catch (SQLException e) {
@@ -110,8 +134,9 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 
 	private ResultSet executeQuery(String sql) throws ConnectException {
 		if (this.dbConnection != null) {
+			Statement query = null;
 			try {
-				Statement query = this.dbConnection.createStatement();
+				query = this.dbConnection.createStatement();
 				return query.executeQuery(sql);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -122,14 +147,15 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.reneruck.tcd.ipp.datamodel.DatabaseConnection2#executeInsert(java.lang.String)
+	/**
+	 * {@inheritDoc DatabaseConnection#executeInsert(String)}
 	 */
 	@Override
 	public ResultSet executeInsert(String sql) throws ConnectException {
 		if (this.dbConnection != null) {
+			PreparedStatement prepareStatement = null;
 			try {
-				PreparedStatement prepareStatement = this.dbConnection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				prepareStatement = this.dbConnection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				prepareStatement.execute(sql, Statement.RETURN_GENERATED_KEYS);
 				return prepareStatement.getGeneratedKeys();
 			} catch (SQLException e) {
@@ -141,14 +167,15 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 		return null;
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.reneruck.tcd.ipp.datamodel.DatabaseConnection2#executeSql(java.lang.String)
+	/**
+	 * {@inheritDoc DatabaseConnection#executeSql(String)}
 	 */
 	@Override
 	public void executeSql(String sqlStatement) throws ConnectException {
 		if (this.dbConnection != null) {
+			Statement statement = null;
 			try {
-				Statement statement = this.dbConnection.createStatement();
+				statement = this.dbConnection.createStatement();
 				statement.execute(sqlStatement);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -158,8 +185,27 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 		}
 	}		
 
-	/* (non-Javadoc)
-	 * @see de.reneruck.tcd.ipp.datamodel.DatabaseConnection2#close()
+	@Override
+	public ResultSet executeUpdate(String sql) throws ConnectException {
+		if (this.dbConnection != null) {
+			Statement statement = null;
+			try {
+				statement = this.dbConnection.createStatement();
+				int executeUpdate = statement.executeUpdate(sql);
+				if(executeUpdate > 0) {
+					return statement.getGeneratedKeys();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			throw new ConnectException("Database unreachable");
+		}
+		return null;
+	}
+	
+	/**
+	 * {@inheritDoc DatabaseConnection#close()}
 	 */
 	@Override
 	public void close() {
@@ -172,21 +218,4 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 		}
 	}
 
-	@Override
-	public ResultSet executeUpdate(String sql) throws ConnectException {
-		if (this.dbConnection != null) {
-			try {
-				Statement statement = this.dbConnection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				int executeUpdate = statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-				if(executeUpdate > 0) {
-					return statement.getGeneratedKeys();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			throw new ConnectException("Database unreachable");
-		}
-		return null;
-	}
 }
