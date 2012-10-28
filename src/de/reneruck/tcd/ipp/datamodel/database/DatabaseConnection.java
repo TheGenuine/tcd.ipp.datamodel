@@ -64,7 +64,7 @@ public interface DatabaseConnection {
 	 * 
 	 * @param sql
 	 *            insert statement
-	 * @return a {@link ResultSet} of generated ID's or null if none have been
+	 * @return The {@link ResultSet} of generated ID's or null if none have been
 	 *         generated or an error ocured.
 	 * @throws ConnectException
 	 *             can occur if no connection to the database is available
@@ -84,8 +84,22 @@ public interface DatabaseConnection {
 	 */
 	public abstract void executeSql(String sqlStatement) throws ConnectException;
 
+	/**
+	 * Executes the given update statement and returns all generated ID's that
+	 * were made with this statement.
+	 * 
+	 * @param sql
+	 *            update statement
+	 * @return The {@link ResultSet} of generated ID's or null if none have been
+	 *         generated or an error occured.
+	 * @throws ConnectException
+	 *             can occur if no connection to the database is available
+	 */
+	public abstract ResultSet executeUpdate(String sql) throws ConnectException;
+	
+	/**
+	 * Tries to close the {@link DatabaseConnection}
+	 */
 	public abstract void close();
-
-	public abstract ResultSet executeUpdate(String string) throws ConnectException;
 
 }
