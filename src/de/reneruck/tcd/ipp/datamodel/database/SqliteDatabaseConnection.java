@@ -38,7 +38,7 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 	@Override
 	public boolean bookingExists(long booking_id) throws ConnectException {
 		if (this.dbConnection != null) {
-			String sql = "SELECT * FROM bookings WHERE booking_id = " + booking_id;
+			String sql = "SELECT COUNT(ID) FROM bookings WHERE booking_id = " + booking_id;
 			ResultSet result = executeQuery(sql);
 			try {
 				if (result != null) {
