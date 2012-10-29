@@ -1,17 +1,19 @@
 package de.reneruck.tcd.ipp.datamodel.transition;
 
+import java.io.Serializable;
 import java.net.ConnectException;
 import java.util.Date;
 
 import de.reneruck.tcd.ipp.datamodel.Booking;
 import de.reneruck.tcd.ipp.datamodel.database.DatabaseConnection;
 
-public class CancelBookingTransition implements Transition {
+public class CancelBookingTransition implements Transition, Serializable {
 
+	private static final long serialVersionUID = 7911624815707534301L;
 	private long transitionId;
 	private Booking booking;
 	private Date processingDate;
-	private TransitionState transitionState;
+	private TransitionState transitionState = TransitionState.PENDING;
 	private String reason;
 
 	public CancelBookingTransition(Booking booking) {

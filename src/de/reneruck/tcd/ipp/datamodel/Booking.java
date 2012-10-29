@@ -17,7 +17,7 @@ public class Booking implements Serializable {
 	private Date travelDate;
 	private Airport from;
 	private Airport to;
-	private boolean accepted;
+	private boolean accepted = false;
 	
 	public Booking(String requester, Date travelDate, Airport from) {
 		super();
