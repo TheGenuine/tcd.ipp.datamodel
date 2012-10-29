@@ -148,4 +148,10 @@ public class MySqlDatabaseConnection implements DatabaseConnection {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public int getBookingsCount() throws ConnectException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

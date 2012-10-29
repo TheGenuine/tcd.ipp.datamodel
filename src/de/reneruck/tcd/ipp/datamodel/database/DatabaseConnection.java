@@ -102,4 +102,12 @@ public interface DatabaseConnection {
 	 */
 	public abstract void close();
 
+	/**
+	 * Gets the overall count of bookings in the system.
+	 * @return 
+	 * 
+	 * @throws ConnectException
+	 */
+	public abstract int getBookingsCount() throws ConnectException;
+
 }

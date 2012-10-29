@@ -218,4 +218,30 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 		}
 	}
 
+	@Override
+	public int getBookingsCount() throws ConnectException {
+		if(this.dbConnection != null) {
+			String query = "SELECT COUNT(ID) FROM Bookings";
+			ResultSet resultSet = executeQuery(query);
+			if(resultSet != null) {
+				try {
+					return resultSet.getInt(1);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} finally {
+					try {
+						if(resultSet != null) {
+							resultSet.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		} else {
+			throw new ConnectException("Database unreachable");
+		}
+		return 0;
+	}
+
 }
