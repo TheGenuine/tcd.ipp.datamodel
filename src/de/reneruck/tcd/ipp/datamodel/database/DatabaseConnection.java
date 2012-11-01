@@ -65,7 +65,7 @@ public interface DatabaseConnection {
 	 * @param sql
 	 *            insert statement
 	 * @return The {@link ResultSet} of generated ID's or null if none have been
-	 *         generated or an error ocured.
+	 *         generated or an error occurred.
 	 * @throws ConnectException
 	 *             can occur if no connection to the database is available
 	 */
@@ -77,8 +77,6 @@ public interface DatabaseConnection {
 	 * 
 	 * @param sqlStatement
 	 *            the statement to execute
-	 * @return true if the execution of the statement was successful. false if
-	 *         not.
 	 * @throws ConnectException
 	 *             can occur if no connection to the database is available
 	 */
@@ -91,7 +89,7 @@ public interface DatabaseConnection {
 	 * @param sql
 	 *            update statement
 	 * @return The {@link ResultSet} of generated ID's or null if none have been
-	 *         generated or an error occured.
+	 *         generated or an error occurred.
 	 * @throws ConnectException
 	 *             can occur if no connection to the database is available
 	 */
@@ -104,7 +102,8 @@ public interface DatabaseConnection {
 
 	/**
 	 * Gets the overall count of bookings in the system.
-	 * @return 
+	 * 
+	 * @return a number between 0 and MAX_INT.
 	 * 
 	 * @throws ConnectException
 	 */
