@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.net.ConnectException;
 import java.util.Date;
 
+import com.google.gson.Gson;
+
 import de.reneruck.tcd.ipp.datamodel.Booking;
 import de.reneruck.tcd.ipp.datamodel.database.DatabaseConnection;
 
@@ -14,7 +16,6 @@ public class CancelBookingTransition implements Transition, Serializable {
 	private Booking booking;
 	private Date processingDate;
 	private TransitionState transitionState = TransitionState.PENDING;
-	private String reason;
 
 	public CancelBookingTransition(Booking booking) {
 		this.booking = booking;
@@ -42,11 +43,6 @@ public class CancelBookingTransition implements Transition, Serializable {
 	}
 
 	@Override
-	public String getReason() {
-		return this.reason;
-	}
-
-	@Override
 	public void performTransition(DatabaseConnection connection) throws ConnectException {
 		if(connection != null && connection.bookingExists(this.booking.getId())) {
 			connection.removeBooking(this.booking.getId());
@@ -55,13 +51,24 @@ public class CancelBookingTransition implements Transition, Serializable {
 	}
 
 	@Override
+	public String toString() {
+		Gson gson = new Gson();
+		String json = this.getClass().getName() + "=" + gson.toJson(this);
+		return json;
+	}
+	
+	@Override
+	public boolean equals(Object arg0) {
+		return ((Transition)arg0).getTransitionId() == this.getTransitionId();
+	}
+	@Override
+	public int hashCode() {
+		return (int) (this.transitionId + this.booking.getId());
+	}
+	
+	@Override
 	public void setHandlingDate(Date handlingDate) {
 		this.processingDate = handlingDate;
-	}
-
-	@Override
-	public void setReason(String reason) {
-		this.reason = reason;
 	}
 
 	@Override

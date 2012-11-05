@@ -12,9 +12,7 @@ public interface Transition {
 	public Booking getBooking();
 	public Date getProcessingDate();
 	public TransitionState getTransitionState();
-	public String getReason();
 	public void performTransition(DatabaseConnection connection) throws ConnectException;
 	public void setHandlingDate(Date handlingDate);
-	public void setReason(String reason);
 	public void setTransitionState(TransitionState state);
 }

@@ -17,7 +17,6 @@ public class NewBookingTransition implements Transition, Serializable {
 	private long transitionId;
 	private Date handlingDate;
 	private TransitionState state = TransitionState.PENDING;
-	private String reason;
 
 	public NewBookingTransition(Booking booking) {
 		this.booking = booking;
@@ -30,14 +29,6 @@ public class NewBookingTransition implements Transition, Serializable {
 
 	public void setHandlingDate(Date handlingDate) {
 		this.handlingDate = handlingDate;
-	}
-
-	public String getReason() {
-		return reason;
-	}
-
-	public void setReason(String reason) {
-		this.reason = reason;
 	}
 
 	@Override
@@ -70,9 +61,9 @@ public class NewBookingTransition implements Transition, Serializable {
 	}
 
 	private void declineRequest(String reason) {
-		this.reason = reason;
-		this.handlingDate = new Date(System.currentTimeMillis());
+		this.booking.setReason(reason);
 		this.booking.setAccepted(false);
+		this.handlingDate = new Date(System.currentTimeMillis());
 	}
 
 	@Override
