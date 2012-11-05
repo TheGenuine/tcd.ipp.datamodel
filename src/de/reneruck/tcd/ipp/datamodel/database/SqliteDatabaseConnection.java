@@ -1,5 +1,8 @@
 package de.reneruck.tcd.ipp.datamodel.database;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,14 +14,44 @@ import java.util.Date;
 
 import de.reneruck.tcd.ipp.datamodel.Airport;
 import de.reneruck.tcd.ipp.datamodel.Booking;
+import de.reneruck.tcd.ipp.datamodel.Statics;
+import de.reneruck.tcd.ipp.datamodel.exceptions.DatabaseException;
 
 public class SqliteDatabaseConnection implements DatabaseConnection {
 
 	private Connection dbConnection = null;
 
 
-	public SqliteDatabaseConnection(String databaseFileName) throws ConnectException {
+	public SqliteDatabaseConnection(String databaseFileName) throws DatabaseException, ConnectException {
+		checkForDBFile();
 		connectToDB(databaseFileName);
+	}
+
+	private void checkForDBFile() throws DatabaseException {
+		File dbFile = new File(Statics.DB_FILE);
+		if(!dbFile.exists()) {
+			try {
+				dbFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			dbInitialSetup();
+		}
+	}
+
+	private void dbInitialSetup() throws DatabaseException {
+		File dbSchemaFile = new File(Statics.DB_SCHMEA_FILE);
+		File dbInitDataFile = new File(Statics.DB_INIT_DATA_FILE);
+		if(dbSchemaFile.exists() && dbInitDataFile.exists()) {
+			try {
+				DBUtils.setupDBStructure(this);
+				DBUtils.setupInitData(this);
+			} catch (FileNotFoundException e) {
+				throw new DatabaseException("Database Initialization failed", e);
+			} catch (IOException e) {
+				throw new DatabaseException("Database Initialization failed", e);
+			}
+		}
 	}
 
 	private void connectToDB(String databaseFileName) throws ConnectException {
@@ -185,6 +218,9 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 		}
 	}		
 
+	/**
+	 * {@inheritDoc DatabaseConnection#executeUpdate(String)}
+	 */
 	@Override
 	public ResultSet executeUpdate(String sql) throws ConnectException {
 		if (this.dbConnection != null) {
@@ -218,6 +254,9 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 		}
 	}
 
+	/**
+	 * {@inheritDoc DatabaseConnection#getBookingsCount()}
+	 */
 	@Override
 	public int getBookingsCount() throws ConnectException {
 		if(this.dbConnection != null) {
@@ -242,6 +281,16 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 			throw new ConnectException("Database unreachable");
 		}
 		return 0;
+	}
+
+	@Override
+	public void removeBooking(long id) throws ConnectException {
+		if(this.dbConnection != null) {
+			String query = "DELETE FROM Bookings WHERE idBooking=" + id;
+			executeSql(query);
+		} else {
+			throw new ConnectException("Database unreachable");
+		}
 	}
 
 }

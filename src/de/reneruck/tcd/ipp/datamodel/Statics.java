@@ -25,5 +25,8 @@ public class Statics {
 	
 	public static final String TRAMSITION_ID = "transitionId";
 	public static final int MAX_PASSENGERS = 6;
+
+	public static final String DB_SCHMEA_FILE = "initDBStructure.sql";
+	public static final String DB_INIT_DATA_FILE = "InitData.sql";
 	public static String CONTENT_TRANSITION = "transition";
 }

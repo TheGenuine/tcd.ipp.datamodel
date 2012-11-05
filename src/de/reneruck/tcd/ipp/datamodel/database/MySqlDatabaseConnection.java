@@ -154,4 +154,10 @@ public class MySqlDatabaseConnection implements DatabaseConnection {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public void removeBooking(long id) {
+		// TODO Auto-generated method stub
+		
+	}
 }

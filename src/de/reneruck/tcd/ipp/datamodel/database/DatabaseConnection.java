@@ -109,4 +109,13 @@ public interface DatabaseConnection {
 	 */
 	public abstract int getBookingsCount() throws ConnectException;
 
+	/**
+	 * Removes the Booking with the given id if exists.
+	 * 
+	 * @param id
+	 *            of the booking to remove
+	 * @throws ConnectException 
+	 */
+	public abstract void removeBooking(long id) throws ConnectException;
+
 }

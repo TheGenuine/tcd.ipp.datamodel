@@ -48,7 +48,9 @@ public class CancelBookingTransition implements Transition, Serializable {
 
 	@Override
 	public void performTransition(DatabaseConnection connection) throws ConnectException {
-		// TODO Auto-generated method stub
+		if(connection != null && connection.bookingExists(this.booking.getId())) {
+			connection.removeBooking(this.booking.getId());
+		}
 
 	}
 
