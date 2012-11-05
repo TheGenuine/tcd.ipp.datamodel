@@ -286,7 +286,7 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 	@Override
 	public void removeBooking(long id) throws ConnectException {
 		if(this.dbConnection != null) {
-			String query = "DELETE FROM Bookings WHERE idBooking=" + id;
+			String query = "DELETE FROM Bookings WHERE booking_id=" + id;
 			executeSql(query);
 		} else {
 			throw new ConnectException("Database unreachable");
