@@ -18,7 +18,18 @@ public class Booking implements Serializable {
 	private Airport from;
 	private Airport to;
 	private boolean accepted = false;
+	private String reason;
 	
+	/**
+	 * Create a new {@link Booking}
+	 * 
+	 * @param requester
+	 *            the user who wants to book the ticket
+	 * @param travelDate
+	 *            what time the ticket should be booked for
+	 * @param from
+	 *            where to fly from
+	 */
 	public Booking(String requester, Date travelDate, Airport from) {
 		super();
 		this.id = System.currentTimeMillis();
@@ -85,7 +96,11 @@ public class Booking implements Serializable {
 				"=============================";
 	}
 
-	public void storeToDB() {
-		
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 }
