@@ -8,7 +8,11 @@ import java.util.Date;
 
 import de.reneruck.tcd.ipp.datamodel.exceptions.NotAcceptedException;
 
-
+/**
+ * 
+ * @author Rene
+ *
+ */
 public class Booking implements Serializable {
 
 	private static final long serialVersionUID = 2638486391776355573L;

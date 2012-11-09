@@ -11,7 +11,15 @@ import java.util.Date;
 
 import de.reneruck.tcd.ipp.datamodel.Airport;
 import de.reneruck.tcd.ipp.datamodel.Booking;
+import de.reneruck.tcd.ipp.datamodel.transition.Transition;
 
+/**
+ * This {@link DatabaseConnection} implementation constitutes the specific
+ * implementation for the connection to a MySql Database.
+ * 
+ * @author Rene
+ * 
+ */
 public class MySqlDatabaseConnection implements DatabaseConnection {
 
 	private Connection dbConnection = null;
@@ -99,7 +107,8 @@ public class MySqlDatabaseConnection implements DatabaseConnection {
 		return 0;
 	}
 
-	private ResultSet executeQuery(String sql) throws ConnectException {
+	@Override
+	public ResultSet executeQuery(String sql) throws ConnectException {
 		if (this.dbConnection != null) {
 			try {
 				Statement query = this.dbConnection.createStatement();
@@ -157,6 +166,18 @@ public class MySqlDatabaseConnection implements DatabaseConnection {
 
 	@Override
 	public void removeBooking(long id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void persistTransitionStoreEntry(Transition transition) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dePersistTransitionStoreEntry(Transition transition) {
 		// TODO Auto-generated method stub
 		
 	}

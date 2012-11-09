@@ -6,6 +6,7 @@ import java.util.Date;
 
 import de.reneruck.tcd.ipp.datamodel.Airport;
 import de.reneruck.tcd.ipp.datamodel.Booking;
+import de.reneruck.tcd.ipp.datamodel.transition.Transition;
 
 public interface DatabaseConnection {
 
@@ -96,6 +97,18 @@ public interface DatabaseConnection {
 	public abstract ResultSet executeUpdate(String sql) throws ConnectException;
 	
 	/**
+	 * Executes the given query statement and returns all queried values.
+	 * 
+	 * @param sql
+	 *            query statement
+	 * @return The {@link ResultSet} of queried items or null if no result could
+	 *         be found or an error occurred.
+	 * @throws ConnectException
+	 *             can occur if no connection to the database is available
+	 */
+	public abstract ResultSet executeQuery(String sql) throws ConnectException;
+	
+	/**
 	 * Tries to close the {@link DatabaseConnection}
 	 */
 	public abstract void close();
@@ -110,12 +123,32 @@ public interface DatabaseConnection {
 	public abstract int getBookingsCount() throws ConnectException;
 
 	/**
-	 * Removes the Booking with the given id if exists.
+	 * Removes the {@link Booking} with the given id if exists.
 	 * 
 	 * @param id
 	 *            of the booking to remove
 	 * @throws ConnectException 
 	 */
 	public abstract void removeBooking(long id) throws ConnectException;
+
+	/**
+	 * Stores the given {@link Transition} into the persistent TransitionStoreDatabase
+	 * 
+	 * @param transition
+	 *            the {@link Transition} that should be stored
+	 * @throws ConnectException 
+	 */
+	public abstract void persistTransitionStoreEntry(Transition transition) throws ConnectException;
+
+	/**
+	 * Removes the given {@link Transition} from the persistent TransitionStoreDatabase
+	 * 
+	 * @param transition
+	 *            the {@link Transition} that should be removed from the
+	 *            persistent store
+	 * @throws ConnectException 
+	 */
+	public abstract void dePersistTransitionStoreEntry(Transition transition) throws ConnectException;
+
 
 }

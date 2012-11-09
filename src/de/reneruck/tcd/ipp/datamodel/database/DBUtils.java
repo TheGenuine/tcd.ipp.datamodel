@@ -10,6 +10,12 @@ import org.apache.commons.io.IOUtils;
 
 import de.reneruck.tcd.ipp.datamodel.Statics;
 
+/**
+ * Utilities to initialize a database and fill it with default or test data.
+ * 
+ * @author Rene
+ * 
+ */
 public class DBUtils {
 
 	public static void insertTestData(DatabaseConnection databaseConnection) throws FileNotFoundException, IOException {

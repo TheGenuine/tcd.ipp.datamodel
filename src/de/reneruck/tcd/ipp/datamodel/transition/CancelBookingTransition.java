@@ -9,6 +9,12 @@ import com.google.gson.Gson;
 import de.reneruck.tcd.ipp.datamodel.Booking;
 import de.reneruck.tcd.ipp.datamodel.database.DatabaseConnection;
 
+/**
+ * {@link Transition} implementation to cancel a {@link Booking}.
+ * 
+ * @author Rene
+ *
+ */
 public class CancelBookingTransition implements Transition, Serializable {
 
 	private static final long serialVersionUID = 7911624815707534301L;

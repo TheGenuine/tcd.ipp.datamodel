@@ -16,13 +16,23 @@ import de.reneruck.tcd.ipp.datamodel.Airport;
 import de.reneruck.tcd.ipp.datamodel.Booking;
 import de.reneruck.tcd.ipp.datamodel.Statics;
 import de.reneruck.tcd.ipp.datamodel.exceptions.DatabaseException;
+import de.reneruck.tcd.ipp.datamodel.transition.Transition;
 
+/**
+ * This {@link DatabaseConnection} implementation constitutes the specific
+ * implementation for the connection to a Sqlite Database.
+ * 
+ * @author Rene
+ * 
+ */
 public class SqliteDatabaseConnection implements DatabaseConnection {
 
 	private Connection dbConnection = null;
+	private String dbFileName;
 
 
 	public SqliteDatabaseConnection(String databaseFileName) throws DatabaseException, ConnectException {
+		this.dbFileName = databaseFileName;
 		checkForDBFile();
 		connectToDB(databaseFileName);
 	}
@@ -30,6 +40,7 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 	private void checkForDBFile() throws DatabaseException {
 		File dbFile = new File(Statics.DB_FILE);
 		if(!dbFile.exists()) {
+			System.out.println("No Database file found, starting initialization of Database");
 			try {
 				dbFile.createNewFile();
 			} catch (IOException e) {
@@ -44,7 +55,9 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 		File dbInitDataFile = new File(Statics.DB_INIT_DATA_FILE);
 		if(dbSchemaFile.exists() && dbInitDataFile.exists()) {
 			try {
+				System.out.println("Creating basic Structure");
 				DBUtils.setupDBStructure(this);
+				System.out.println("Insert default data-> !could take up to several minutes!");
 				DBUtils.setupInitData(this);
 			} catch (FileNotFoundException e) {
 				throw new DatabaseException("Database Initialization failed", e);
@@ -70,23 +83,24 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 	 */
 	@Override
 	public boolean bookingExists(long booking_id) throws ConnectException {
-		if (this.dbConnection != null) {
-			String sql = "SELECT COUNT(ID) FROM bookings WHERE booking_id = " + booking_id;
-			ResultSet result = executeQuery(sql);
+		if (this.dbConnection == null) {
+			connectToDB(this.dbFileName);
+		}
+		String sql = "SELECT COUNT(ID) FROM bookings WHERE booking_id = " + booking_id;
+		ResultSet result = executeQuery(sql);
+		try {
+			if (result != null) {
+				return (result.getInt(1) != 0);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
 			try {
-				if (result != null) {
-					return (result.getInt(1) != 0);
+				if(result != null) {
+					result.close();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
-			} finally {
-				try {
-					if(result != null) {
-						result.close();
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
 			}
 		}
 		return false;
@@ -97,23 +111,24 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 	 */
 	@Override
 	public int getBookingCountForFlight(int flightId) throws ConnectException {
-		if (this.dbConnection != null) {
-			String sql = "SELECT COUNT(ID) FROM bookings WHERE Flight = " + flightId;
-			ResultSet result = executeQuery(sql);
+		if (this.dbConnection == null) {
+			connectToDB(this.dbFileName);
+		}
+		String sql = "SELECT COUNT(ID) FROM bookings WHERE Flight = " + flightId;
+		ResultSet result = executeQuery(sql);
+		try {
+			if (result != null) {
+				return result.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
 			try {
-				if (result != null) {
-					return result.getInt(1);
+				if(result != null) {
+					result.close();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
-			} finally {
-				try {
-					if(result != null) {
-						result.close();
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
 			}
 		}
 		return 0;
@@ -165,7 +180,14 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 		return 0;
 	}
 
-	private ResultSet executeQuery(String sql) throws ConnectException {
+	/**
+	 * {@inheritDoc DatabaseConnection#executeQuery(String)}
+	 */
+	@Override
+	public ResultSet executeQuery(String sql) throws ConnectException {
+		if (this.dbConnection == null) {
+			connectToDB(this.dbFileName);
+		}
 		if (this.dbConnection != null) {
 			Statement query = null;
 			try {
@@ -185,6 +207,9 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 	 */
 	@Override
 	public ResultSet executeInsert(String sql) throws ConnectException {
+		if (this.dbConnection == null) {
+			connectToDB(this.dbFileName);
+		}
 		if (this.dbConnection != null) {
 			PreparedStatement prepareStatement = null;
 			try {
@@ -205,6 +230,9 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 	 */
 	@Override
 	public void executeSql(String sqlStatement) throws ConnectException {
+		if (this.dbConnection == null) {
+			connectToDB(this.dbFileName);
+		}
 		if (this.dbConnection != null) {
 			Statement statement = null;
 			try {
@@ -223,6 +251,9 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 	 */
 	@Override
 	public ResultSet executeUpdate(String sql) throws ConnectException {
+		if (this.dbConnection == null) {
+			connectToDB(this.dbFileName);
+		}
 		if (this.dbConnection != null) {
 			Statement statement = null;
 			try {
@@ -259,6 +290,9 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 	 */
 	@Override
 	public int getBookingsCount() throws ConnectException {
+		if (this.dbConnection == null) {
+			connectToDB(this.dbFileName);
+		}
 		if(this.dbConnection != null) {
 			String query = "SELECT COUNT(ID) FROM Bookings";
 			ResultSet resultSet = executeQuery(query);
@@ -285,9 +319,38 @@ public class SqliteDatabaseConnection implements DatabaseConnection {
 
 	@Override
 	public void removeBooking(long id) throws ConnectException {
+		if (this.dbConnection == null) {
+			connectToDB(this.dbFileName);
+		}
 		if(this.dbConnection != null) {
 			String query = "DELETE FROM Bookings WHERE booking_id=" + id;
 			executeSql(query);
+		} else {
+			throw new ConnectException("Database unreachable");
+		}
+	}
+
+	@Override
+	public void persistTransitionStoreEntry(Transition transition) throws ConnectException {
+		if (this.dbConnection == null) {
+			connectToDB(this.dbFileName);
+		}
+		if(this.dbConnection != null) {
+			String query = "INSERT INTO TransitionQueue values(NULL, " + transition.getTransitionId() + ", '" + transition.toString() + "')";
+			executeUpdate(query);
+		} else {
+			throw new ConnectException("Database unreachable");
+		}
+	}
+
+	@Override
+	public void dePersistTransitionStoreEntry(Transition transition) throws ConnectException {
+		if (this.dbConnection == null) {
+			connectToDB(this.dbFileName);
+		}
+		if(this.dbConnection != null) {
+			String query = "DELETE FROM TransitionQueue WHERE Transition_ID = " + transition.getTransitionId();
+			executeUpdate(query);
 		} else {
 			throw new ConnectException("Database unreachable");
 		}

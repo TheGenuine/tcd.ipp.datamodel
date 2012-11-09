@@ -10,6 +10,12 @@ import de.reneruck.tcd.ipp.datamodel.Booking;
 import de.reneruck.tcd.ipp.datamodel.Statics;
 import de.reneruck.tcd.ipp.datamodel.database.DatabaseConnection;
 
+/**
+ * {@link Transition} implementation create a new {@link Booking}.
+ * 
+ * @author Rene
+ *
+ */
 public class NewBookingTransition implements Transition, Serializable {
 
 	private static final long serialVersionUID = -7340057807403227632L;
